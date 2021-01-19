@@ -8,6 +8,7 @@ class Model {
         this.min = min
         this.max = max
         this.val = val
+        this.step = step
     }
     getMax = () => {
         return this.max
@@ -29,6 +30,14 @@ class Model {
         if (val <= this.min) {this.val = this.min; return}
         this.val = val
     }
+    getStep = () => {
+        return this.step
+    }
+    setStep = (val) => {
+        if (val <= 0) {this.step = 1; return}
+        if (val > this.max) {this.step = this.max; return}
+        this.step = val
+    }
 }
 
 class Controller {
@@ -49,7 +58,6 @@ class Controller {
         console.log(this.currentvalToPercent())
         this.hand.css({'left' : `${this.currentvalToPercent()}%`})
         this.hand.on('mousedown', (e) => {
-            let start = e.pageX
             $('html').on('mousemove', (event) => {
                 this.currentVal = event.pageX - this.mainAbsX - (this.handWidth/2)
                 this.hand.css({'left' : `${this.currentvalToPercent()}%`})
