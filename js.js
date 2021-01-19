@@ -25,6 +25,8 @@ class Model {
         return this.val
     }
     setVal = (val) => {
+        if (val >= this.max) {this.val = this.max; return}
+        if (val <= this.min) {this.val = this.min; return}
         this.val = val
     }
 }
@@ -36,12 +38,12 @@ class Controller {
         this.hand = this.view.handler
         this.mainAbsX = this.view.main[0].offsetLeft
         this.handWidth = this.hand[0].offsetWidth
-        this.currentVal = this.model.getVal()
-        this.max = this.model.getMax()
-        this.min = this.model.getMin()
+        //this.currentVal = this.model.getVal()
+        //this.max = this.model.getMax()
+        //this.min = this.model.getMin()
     }
     currentvalToPercent() {
-        return (this.currentVal / this.max)*100
+        return (this.model.getVal() / this.model.getMax())*100
     }
     bind() {
         console.log(this.currentvalToPercent())
