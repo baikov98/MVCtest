@@ -36,18 +36,21 @@ class Controller {
         this.hand = this.view.handler
         this.mainAbsX = this.view.main[0].offsetLeft
         this.handWidth = this.hand[0].offsetWidth
-        this.handX = this.model.val
+        this.currentVal = this.model.getVal()
+        this.max = this.model.getMax()
+        this.min = this.model.getMin()
     }
-    /* valToPx(val) {
-        return 
-    } */
+    currentvalToPercent() {
+        return (this.currentVal / this.max)*100
+    }
     bind() {
-        this.hand.css({'left' : `${this.handX}px`})
+        console.log(this.currentvalToPercent())
+        this.hand.css({'left' : `${this.currentvalToPercent()}%`})
         this.hand.on('mousedown', (e) => {
             let start = e.pageX
             $('html').on('mousemove', (event) => {
-                this.handX = event.pageX - this.mainAbsX - (this.handWidth/2)
-                this.hand.css({'left' : `${this.handX}px`})
+                this.currentVal = event.pageX - this.mainAbsX - (this.handWidth/2)
+                this.hand.css({'left' : `${this.currentvalToPercent()}%`})
             })
         })
         $('html').on('mouseup', () => {
@@ -73,22 +76,5 @@ $(document).ready(() => {
     let view = new View()
     let cont = new Controller(model, view)
     cont.bind()
-    /* let mainAbsX = view.main[0].offsetLeft
-    let hand = view.handler
-
-    let handWidth = hand[0].offsetWidth
-    let handX = 100
-    hand.css({'left' : `${handX}px`})
-    
-    hand.on('mousedown', (e) => {
-        let start = e.pageX
-        $('html').on('mousemove', (event) => {
-            handX = event.pageX - mainAbsX - (handWidth/2)
-            hand.css({'left' : `${handX}px`})
-        })
-    })
-    $('html').on('mouseup', () => {
-        $('html').off('mousemove')
-    }) */
 
 })
