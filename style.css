@@ -1,0 +1,26 @@
+.container {
+    width: 320px;
+    height: 300px;
+    margin: 100px;
+}
+.range {
+    height: 20px;
+    background-color: blueviolet;
+    
+    position: relative;
+}
+
+.range__handler {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: chartreuse;
+    margin: 3px 0;
+
+    user-select: none;
+}
+
+body {
+    width: 1000px;
+    height: 1000px;
+}
