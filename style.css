@@ -4,10 +4,11 @@
     margin: 100px;
 }
 .range {
-    height: 20px;
+    height: 8px;
     background-color: blueviolet;
-    
+    cursor: pointer;
     position: relative;
+    border-radius: 2px;
 }
 
 .range__handler {
@@ -15,9 +16,10 @@
     height: 15px;
     width: 15px;
     background-color: chartreuse;
-    margin: 3px 0;
-
+    cursor: pointer;
     user-select: none;
+    transform: translate(-50%,-25%);
+    border-radius: 50%;
 }
 
 body {
