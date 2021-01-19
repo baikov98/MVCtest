@@ -31,6 +31,7 @@ class Model {
     setVal = (val) => {
         if (val >= this.max) {this.val = this.max; return}
         if (val <= this.min) {this.val = this.min; return}
+        val = this.getStepNum(val, this.getStep(), this.getMax())
         this.val = val
     }
     getStep = () => {
@@ -40,6 +41,11 @@ class Model {
         if (val <= 0) {this.step = 1; return}
         if (val > this.max) {this.step = this.max; return}
         this.step = val
+    }
+    getStepNum(num, step, max) {
+        let res = Math.round(num/step)*step
+        if (res >= max) res = max
+        return res
     }
 }
 
@@ -62,11 +68,7 @@ class Controller {
     currentPxToVal(px) {
         return (px/this.rangeWidth)*this.model.getMax()
     }
-    getNumForStep(num, step, max) {
-        let res = Math.floor(num/step)*step
-        if (res >= max) res = max
-        return res
-    }
+    
     bind() {
         this.hand.css({'left' : `${10}px`})
         let handDiff = Math.floor(this.handWidth/2)
@@ -78,10 +80,6 @@ class Controller {
 
                 let pxForRange = this.currentValToPx(this.model.getVal())
 
-                /* if (pxForRange > (this.rangeWidth - this.handWidth)) {
-                    pxForRange = this.rangeWidth - this.handWidth
-                } */
-                //let currentVal = event.pageX - this.mainAbsX - handDiff
                 console.log(this.model.getVal())
                 this.hand.css({'left' : `${pxForRange}px`})
             })
