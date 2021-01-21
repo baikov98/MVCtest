@@ -66,7 +66,7 @@ class Controller {
     currentPxToVal(px) {
         return (px/this.rangeWidth)*this.model.getMax()
     }
-    handPositionByClick(event) {
+    handXPositionByClick(event) {
         let px = event.pageX - this.barAbsX
         let modelVal = this.currentPxToVal(px)
         this.model.setVal(modelVal)
@@ -79,14 +79,15 @@ class Controller {
         //console.log(this.hand)
         this.hand.css({'left' : `${this.model.getVal()}px`})
 
-        this.hand.on('mousedown', (e) => {
+        this.bar.on('mousedown', (e) => {
+            this.handXPositionByClick(e)
             $('html').on('mousemove', (event) => {
-                this.handPositionByClick(event)
+                this.handXPositionByClick(event)
             })
         })
-        this.bar.on('click', (event) => {
-            this.handPositionByClick(event)
-        })  
+        /* this.bar.on('click', (event) => {
+            this.handXPositionByClick(event)
+        })   */
         $('html').on('mouseup', () => {
             $('html').off('mousemove')
         })
