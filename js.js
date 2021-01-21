@@ -78,12 +78,9 @@ class Controller {
     rodXPositionByClick(event) {
         let px = event.pageX - this.view.bar[0].offsetLeft
 
-        let modelVal = this.currentPxToVal(px)
-        this.model.setVal(modelVal)
-
-        let pxForRange = this.currentValToPx(this.model.getVal())
-
-        this.view.rod.css({'left' : `${pxForRange}px`})
+        this.model.setVal(this.currentPxToVal(px))
+        
+        this.view.rod.css({'left' : `${this.currentValToPx(this.model.getVal())}px`})
     }
     
     bind() {
