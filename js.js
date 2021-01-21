@@ -42,10 +42,19 @@ class Model {
     }
     modelChangedVal = new Observer()
     setVal = (val) => {
-        if (val >= this.max) {this.val = this.max; return}
-        if (val <= this.min) {this.val = this.min; return}
+        if (val >= this.max) {
+            this.val = this.max
+            this.modelChangedVal.notifyObservers(this.val)
+            return
+        }
+        if (val <= this.min) {
+            this.val = this.min
+            this.modelChangedVal.notifyObservers(this.val)
+            return
+        }
         val = this.getStepNum(val, this.getStep(), this.getMax())
         this.val = val
+        this.modelChangedVal.notifyObservers(this.val)
     }
     getStep = () => {
         return this.step
@@ -80,14 +89,15 @@ class Controller {
         let px = event.pageX - this.view.bar[0].offsetLeft
         let modelVal = this.currentPxToVal(px)
         this.model.setVal(modelVal)
-
-        let pxForRange = this.currentValToPx(this.model.getVal())
-        this.view.rod.css({'left' : `${pxForRange}px`})
-        this.view.rod.parents('.range').data({'val' : this.model.getVal()})
-        this.view.rod.parents('.range').trigger('newval')
     }
     
     bind() {
+        this.model.modelChangedVal.addObserver(() => {
+            let pxForRange = this.currentValToPx(this.model.getVal())
+            this.view.rod.css({'left' : `${pxForRange}px`})
+            this.view.rod.parents('.range').data({'val' : this.model.getVal()})
+            this.view.rod.parents('.range').trigger('newval')
+        })
         this.bar.on('mousedown', (event) => {
             this.rodXPositionByClick(event)
             $('html').on('mousemove', (e) => {
