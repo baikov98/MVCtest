@@ -78,21 +78,20 @@ class Controller {
     }
     rodXPositionByClick(event) {
         let px = event.pageX - this.view.bar[0].offsetLeft
-
         let modelVal = this.currentPxToVal(px)
         this.model.setVal(modelVal)
 
         let pxForRange = this.currentValToPx(this.model.getVal())
         this.view.rod.css({'left' : `${pxForRange}px`})
+        this.view.rod.parents('.range').data({'val' : this.model.getVal()})
+        this.view.rod.parents('.range').trigger('newval')
     }
     
     bind() {
         this.bar.on('mousedown', (event) => {
             this.rodXPositionByClick(event)
-            console.log(event)
             $('html').on('mousemove', (e) => {
                 this.rodXPositionByClick(e)
-                console.log(this.model.getVal())
             })
         })
 
@@ -117,5 +116,4 @@ $(document).ready(() => {
     let cont = new Controller(model, view)
     cont.bind()
     let obs = new Observer()
-
 })
