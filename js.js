@@ -6,10 +6,10 @@ class Observer {
         if (typeof fn === 'function') this.observers.push(fn)
         else throw new Error('Observer must be a Function')
     } 
-    notifyObservers() {
+    notifyObservers(data) {
         let obsCopyArray = this.observers.slice(0)
         for (let func of obsCopyArray) {
-            func()
+            func(data)
         }
     }
 }
@@ -40,6 +40,7 @@ class Model {
     getVal = () => {
         return this.val
     }
+    modelChangedVal = new Observer()
     setVal = (val) => {
         if (val >= this.max) {this.val = this.max; return}
         if (val <= this.min) {this.val = this.min; return}
@@ -68,26 +69,30 @@ class Controller {
         this.bar = this.view.bar
         this.rod = this.view.rod
     }
-
-    currentValToPx(px) {
-        return (px/this.model.getMax())*this.view.bar[0].offsetWidth
+    
+    currentValToPx(val) {
+        return ((val - this.model.getMin())/this.model.getDiff())*this.view.bar[0].offsetWidth
     }
     currentPxToVal(px) {
-        return (px/this.view.bar[0].offsetWidth)*this.model.getMax()
+        return (px/this.view.bar[0].offsetWidth)*(this.model.getDiff()) + this.model.getMin()
     }
     rodXPositionByClick(event) {
         let px = event.pageX - this.view.bar[0].offsetLeft
 
-        this.model.setVal(this.currentPxToVal(px))
-        
-        this.view.rod.css({'left' : `${this.currentValToPx(this.model.getVal())}px`})
+        let modelVal = this.currentPxToVal(px)
+        this.model.setVal(modelVal)
+
+        let pxForRange = this.currentValToPx(this.model.getVal())
+        this.view.rod.css({'left' : `${pxForRange}px`})
     }
     
     bind() {
-        this.bar.on('mousedown', (e) => {
-            this.rodXPositionByClick(e)
-            $('html').on('mousemove', (event) => {
-                this.rodXPositionByClick(event)
+        this.bar.on('mousedown', (event) => {
+            this.rodXPositionByClick(event)
+            console.log(event)
+            $('html').on('mousemove', (e) => {
+                this.rodXPositionByClick(e)
+                console.log(this.model.getVal())
             })
         })
 
@@ -106,16 +111,11 @@ class View {
     }
 }
 
-
 $(document).ready(() => {
-    let model = new Model(0, 100, 80, 12)
+    let model = new Model(200, 1000, 80, 55)
     let view = new View()
     let cont = new Controller(model, view)
-    let obs = new Observer()
-    obs.addObserver(() => {console.log('first')})
-    obs.addObserver(() => {console.log('first2')})
-    obs.addObserver(() => {console.log('first3')})
-    obs.notifyObservers()
     cont.bind()
+    let obs = new Observer()
 
 })

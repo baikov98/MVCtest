@@ -1,5 +1,5 @@
 .container {
-    max-width: 1000px;
+    max-width: 700px;
     height: 300px;
     margin: 100px;
 }
@@ -23,6 +23,9 @@
     border-radius: 50%;
 }
 
+.range_val {
+    margin: 15px;
+} 
 body {
     
 }
