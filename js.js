@@ -1,8 +1,20 @@
 class Observer {
     constructor() {
-        this.observers = this.observers
+        this.observers = []
+    }
+    addObserver(fn) {
+        if (typeof fn === 'function') this.observers.push(fn)
+        else throw new Error('Observer must be a Function')
+    } 
+    notifyObservers() {
+        let obsCopyArray = this.observers.slice(0)
+        for (let func of obsCopyArray) {
+            func()
+        }
     }
 }
+
+
 class Model {
     constructor(min, max, val, step) {
         this.min = min
@@ -54,40 +66,34 @@ class Controller {
         this.model = model
         this.view = view
         this.bar = this.view.bar
-        this.hand = this.view.handler
-        this.barAbsX = this.view.bar[0].offsetLeft
-        this.handWidth = this.hand[0].offsetWidth
-        this.rangeWidth = this.view.bar[0].offsetWidth
+        this.rod = this.view.rod
     }
 
     currentValToPx(px) {
-        return (px/this.model.getMax())*this.rangeWidth
+        return (px/this.model.getMax())*this.view.bar[0].offsetWidth
     }
     currentPxToVal(px) {
-        return (px/this.rangeWidth)*this.model.getMax()
+        return (px/this.view.bar[0].offsetWidth)*this.model.getMax()
     }
-    handXPositionByClick(event) {
-        let px = event.pageX - this.barAbsX
+    rodXPositionByClick(event) {
+        let px = event.pageX - this.view.bar[0].offsetLeft
+
         let modelVal = this.currentPxToVal(px)
         this.model.setVal(modelVal)
+
         let pxForRange = this.currentValToPx(this.model.getVal())
-        console.log(this.model.getVal())
-        this.hand.css({'left' : `${pxForRange}px`})
+
+        this.view.rod.css({'left' : `${pxForRange}px`})
     }
     
     bind() {
-        //console.log(this.hand)
-        this.hand.css({'left' : `${this.model.getVal()}px`})
-
         this.bar.on('mousedown', (e) => {
-            this.handXPositionByClick(e)
+            this.rodXPositionByClick(e)
             $('html').on('mousemove', (event) => {
-                this.handXPositionByClick(event)
+                this.rodXPositionByClick(event)
             })
         })
-        /* this.bar.on('click', (event) => {
-            this.handXPositionByClick(event)
-        })   */
+
         $('html').on('mouseup', () => {
             $('html').off('mousemove')
         })
@@ -99,15 +105,20 @@ class View {
         this.html = $('html')
         this.container = $("<div class='container'></div>").appendTo('body')
         this.bar = $("<div class='range'></div>").appendTo(this.container)
-        this.handler = $("<div class='range__handler'></div>").appendTo(this.bar)
+        this.rod = $("<div class='range__rod'></div>").appendTo(this.bar)
     }
 }
 
 
 $(document).ready(() => {
-    let model = new Model(0, 100, 10, 2)
+    let model = new Model(0, 100, 80, 12)
     let view = new View()
     let cont = new Controller(model, view)
+    let obs = new Observer()
+    obs.addObserver(() => {console.log('first')})
+    obs.addObserver(() => {console.log('first2')})
+    obs.addObserver(() => {console.log('first3')})
+    obs.notifyObservers()
     cont.bind()
 
 })
