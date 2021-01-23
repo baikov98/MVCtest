@@ -110,7 +110,7 @@ class Controller {
 
         this.model.setVal(this.model.getValFrom())
         this.model.setVal(this.model.getValTo(), false)
-        
+
         this.bar.on('mousedown', (event) => {
             let rod = this.view.checkPxRange(this.view.getClickBarX(event.pageX))
             console.log(rod)
@@ -134,6 +134,7 @@ class View {
         this.bar = $("<div class='range'></div>").appendTo(this.container)
         this.rod = $("<div class='range__rodfrom'></div>").appendTo(this.bar)
         this.rod2 = $("<div class='range__rodto'></div>").appendTo(this.bar)
+        this.interval = $("<div class='range__interval'></div>").appendTo(this.bar)
     }
     draw(px, data, rod=true) {
         if (rod) {
@@ -145,7 +146,13 @@ class View {
             this.rod2.parents('.range').data({'valTo' : data})
             this.rod2.parents('.range').trigger('newvalto')
         }
+        this.drawInterval()
     }
+    drawInterval() {
+        this.interval.css({'left' : `${this.rod[0].offsetLeft}px`,
+                           'width' : `${Math.abs(this.rod[0].offsetLeft-this.rod2[0].offsetLeft)}px`})
+    }
+
     checkPxRange(px) {
         if (Math.abs(px-this.rod[0].offsetLeft) < Math.abs(px-this.rod2[0].offsetLeft)) {
             return true
@@ -162,5 +169,6 @@ $(document).ready(() => {
     let cont = new Controller(model, view)
     cont.bind()
     let obs = new Observer()
+    localStorage.setItem('first', 'val')
     
 })

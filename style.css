@@ -11,9 +11,16 @@
     border-radius: 2px;
     
 }
+.range__interval {
+    height: 8px;
+    background-color: brown;
+    cursor: pointer;
+    position: absolute;
+}
 
 .range__rodfrom,
 .range__rodto {
+    z-index: 3;
     position: absolute;
     height: 15px;
     width: 15px;
@@ -31,8 +38,7 @@
 .range__valFrom,
 .range__valTo {
     display: inline-flex;
-    margin: 15px;
-    
+    margin: 15px;  
 } 
 body {
     
