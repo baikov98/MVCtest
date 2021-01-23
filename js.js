@@ -23,6 +23,7 @@ class Model {
         this.valTo = valTo
         this.step = step
         this.isDouble = isDouble
+        this.isRodFrom = true
     }
     getDiff = () => {
         return this.max - this.min
@@ -48,6 +49,9 @@ class Model {
     modelChangedValFrom = new Observer()
     modelChangedValTo = new Observer()
     setVal = (val, rod=true) => {
+        if (val > this.getValTo() && rod) this.isRodFrom = false
+        if (val < this.getValFrom() && !rod) this.isRodFrom = true
+
         if (val >= this.max) {
             rod ? this.valFrom = this.max : this.valTo = this.max
             rod ? this.modelChangedValFrom.notifyObservers(this.val) : this.modelChangedValTo.notifyObservers(this.val)
@@ -112,11 +116,11 @@ class Controller {
         this.model.setVal(this.model.getValTo(), false)
 
         this.bar.on('mousedown', (event) => {
-            let rod = this.view.checkPxRange(this.view.getClickBarX(event.pageX))
-            console.log(rod)
-            this.rodXPositionByClick(event, rod)
+            this.model.isRodFrom = this.view.checkPxRange(this.view.getClickBarX(event.pageX))
+
+            this.rodXPositionByClick(event, this.model.isRodFrom)
             $('html').on('mousemove', (e) => {
-                this.rodXPositionByClick(e, rod)
+                this.rodXPositionByClick(e, this.model.isRodFrom)
             })
         })
 
@@ -164,7 +168,7 @@ class View {
 }
 
 $(document).ready(() => {
-    let model = new Model(200, 1000, 80, 500, 55, true)
+    let model = new Model(200, 1000, 80, 500, 20, true)
     let view = new View($('<div class="RangeMetaLamp"></div>').appendTo('body'))
     let cont = new Controller(model, view)
     cont.bind()
