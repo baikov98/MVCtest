@@ -172,7 +172,5 @@ $(document).ready(() => {
     let view = new View($('<div class="RangeMetaLamp"></div>').appendTo('body'))
     let cont = new Controller(model, view)
     cont.bind()
-    let obs = new Observer()
-    localStorage.setItem('first', 'val')
     
 })
