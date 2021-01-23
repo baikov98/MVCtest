@@ -12,19 +12,27 @@
     
 }
 
-.range__rod {
+.range__rodfrom,
+.range__rodto {
     position: absolute;
     height: 15px;
     width: 15px;
-    background-color: chartreuse;
+    background-color: rgb(212, 243, 33);
     cursor: pointer;
     user-select: none;
     transform: translate(-50%,-25%);
     border-radius: 50%;
 }
 
-.range_val {
+.range__rodto {
+    background-color: rgb(80, 221, 80);
+}
+
+.range__valFrom,
+.range__valTo {
+    display: inline-flex;
     margin: 15px;
+    
 } 
 body {
     
